@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { Observable} from 'rxjs';
+import { Firestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+
+import * as firebase from "firebase/app"; 
 
 import 'firebase/firestore';
-
+import { DaysFirestoreService } from './services/firestore/days-firestore.service';
 import { Itinerario } from './interface/itinerario.interface';
-import { AngularFireMessaging } from '@angular/fire/compat/messaging';
-
-import {mergeMapTo}from 'rxjs/operators';
-
+import { PushNotificationService } from './services/push-notification.service';
 
 
 
@@ -16,28 +16,22 @@ import {mergeMapTo}from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-
 export class AppComponent {
   title = 'MiViajeP2';
   
-   constructor(private afMessaging: AngularFireMessaging){}
+  days$: Observable<Itinerario[]>;
 
-  requestPermission(){
-    this.afMessaging.requestPermission
-    .pipe(mergeMapTo(this.afMessaging.tokenChanges))
-    .subscribe(
-      (token) => { console.log('Permission granted! Save to the server!' ,token); },
-      (error) => {console.error(error);},
-    );
-   }
 
-   days$: Observable<Itinerario[]>;
-   
-   ngOnInit(): void {
-   
+  constructor( private notification: PushNotificationService ) {
+    notification.requestPermission().then(token =>{
+      console.log(token);
+    })
   }
 
- 
-  
+  ngOnInit(): void {
+    this.notification.receiveMessage().subscribe(payload =>{
+      console.log(payload);
+    })
+   
+  }
 }
-

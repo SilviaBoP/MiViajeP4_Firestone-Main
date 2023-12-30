@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { observeInsideAngular } from '@angular/fire';
 import { AngularFireMessaging, AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 import { AngularFireModule } from '@angular/fire/compat';
+import { PushNotificationService } from './services/push-notification.service';
 
 
 @NgModule({
@@ -35,18 +36,17 @@ import { AngularFireModule } from '@angular/fire/compat';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirebaseApp(() => initializeApp(environment.configFirebase)),
     provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
     provideStorage(() => getStorage()),
     FirestoreModule,
     FormsModule,
-    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireModule.initializeApp(environment.configFirebase),
     AngularFireMessagingModule,
   ],
 
-  providers: [
-  ],
+  providers: [PushNotificationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
